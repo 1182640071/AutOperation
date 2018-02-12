@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>tile</title>
+
+    <link href="/static/cssform/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/static/js/jsform/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="/static/cssform/animate.css" rel="stylesheet">
+    <link href="/static/cssform/style.css" rel="stylesheet">
+    <!-- 最后引入 -->
+    <link href="/static/cssform/css/main.css" rel="stylesheet" />
+    <link href="/static/cssform/css/main-modal.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="/static/js/drawn/jQuery.js"></script>
+    <script type="text/javascript" src="/static/js/drawn/jqplot.js"></script>
+{#<script src="/gg_bd_ad_720x90.js" type="text/javascript"></script>#}
+{#<script src="/follow.js" type="text/javascript"></script>#}
+
+
+</head>
+<body>
+    <button style="height: 6% ;width: 18% ;position: absolute;top: 5%;left: 20%;border: hidden;" type="button" class="btn btn-primary" onclick="changeStyle()">柱状图</button>
+    <button style="height: 6% ;width: 18% ; position: absolute;top: 5%;left: 67% ; background-color:#FF7575;border: hidden;" type="button" class="btn btn-primary" onclick="changeStyle1()">折线图</button>
+
+    <div id="chart1" style="display: block ; position: absolute;top: 13%;width: 98%; height: 77%"></div>
+
+	<div id="chart2" style="display: block ; position: absolute;top: 13%;width: 98%; height: 77%"></div>
+
+    <script type="text/javascript">
+
+        jQuery.ajax({
+                type : "post",
+                url  : "/dayData/",
+                dataType : 'json',
+                async: false,
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(d){
+                    data = d[1]
+                    x = d[0]
+                    line_title = d[2]
+                    data_max = d[3]
+                }
+            });
+
+
+{#	var data = [[1,2,3,4,5,6,7,8,9],[3,6,8,1,11,22,4,21,6],[3,4,2,3,8,10,4,23,3,9]];#}
+{#	var data_max = 5; //Y轴最大刻度#}
+{#	var line_title = ["事件","故障","其他"]; //曲线名称#}
+	var y_label = ""; //Y轴标题
+	var x_label = "Y轴:数量 X轴:日期"; //X轴标题
+{#	var x = ['3月1日','3月2日','3月3日','3月4日','3月5日','3月6日','3月7日','3月8日','3月9日','3月10日']; //定义X轴刻度值#}
+	var title = "这是标题"; //统计图标标题
+	j.jqplot.diagram.base("chart1", data, line_title, "", x, x_label, y_label, data_max, 1);
+	j.jqplot.diagram.base("chart2", data, line_title, "", x, x_label, y_label, data_max, 2);
+        document.getElementById('chart2').style.display="none";
+    </script>
+</body>
+
+    <script type="text/javascript">
+        function changeStyle(){
+            document.getElementById('chart1').style.display="none";
+            document.getElementById('chart2').style.display="block";
+        }
+        function changeStyle1(){
+            document.getElementById('chart1').style.display="block";
+            document.getElementById('chart2').style.display="none";
+        }
+    </script>
+</html>
+

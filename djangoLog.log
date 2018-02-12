@@ -1,0 +1,4 @@
+2017-05-19 05:17:56,933 WARNING /Users/wml/PycharmProjects/AutOperation/AutOperation/urls.py:59: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  (r'^check_code/$',login.check_code),
+
+2017-05-19 05:18:18,253 WARNING Not Found: /favicon.ico

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运维平台</title>
+	<link href="/static/cssform/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- Toastr style -->
+    <link href="/static/cssform/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <!-- Gritter -->
+    <link href="/static/js/jsform/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="/static/cssform/animate.css" rel="stylesheet">
+    <link href="/static/cssform/style.css" rel="stylesheet">
+    <!-- Mainly scripts -->
+    <script src="/static/js/jsform/jquery-2.1.1.js"></script>
+    <script src="/static/js/jsform/bootstrap.min.js"></script>
+    <script src="/static/js/jsform/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/jsform/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- Flot -->
+    <script src="/static/js/jsform/plugins/flot/jquery.flot.js"></script>
+    <script src="/static/js/jsform/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/static/js/jsform/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="/static/js/jsform/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="/static/js/jsform/plugins/flot/jquery.flot.pie.js"></script>
+    <!-- Peity -->
+    <script src="/static/js/jsform/plugins/peity/jquery.peity.min.js"></script>
+    <script src="/static/js/jsform/demo/peity-demo.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/jsform/inspinia.js"></script>
+    <script src="/static/js/jsform/plugins/pace/pace.min.js"></script>
+    <!-- jQuery UI -->
+    <script src="/static/js/jsform/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- GITTER -->
+    <script src="/static/js/jsform/plugins/gritter/jquery.gritter.min.js"></script>
+    <!-- Sparkline -->
+    <script src="/static/js/jsform/plugins/sparkline/jquery.sparkline.min.js"></script>
+    <!-- Sparkline demo data  -->
+    <script src="/static/js/jsform/demo/sparkline-demo.js"></script>
+    <!-- ChartJS-->
+    <script src="/static/js/jsform/plugins/chartJs/Chart.min.js"></script>
+    <!-- Toastr -->
+    <script src="/static/js/jsform/plugins/toastr/toastr.min.js"></script>
+</head>
+
+<style>
+	body{
+		overflow-y: hidden;
+    	overflow-x: hidden;
+		}
+</style>
+
+<body>
+    <div id="leftForm">
+	<nav class="navbar-default navbar-static-side" role="navigation">
+    	<div class="sidebar-collapse">
+        	<ul class="nav metismenu" id="side-menu">
+            	<li class="nav-header">
+                	<div class="dropdown profile-element">
+                		<span>
+                    		<img alt="image" class="img-circle" src="/static/img/profile_small.jpg" />
+                        </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        	<span class="clear">
+                        		<span class="block m-t-xs">
+                        			<strong class="font-bold">{{request.session.userName}}</strong>
+                        		</span>
+                        		<span class="text-muted text-xs block">身份权限 <b class="caret"></b>
+                        		</span>
+                        	</span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        	<li><a href="profile.html">个人简介</a></li>
+                            <li><a href="contacts.html">通讯录</a></li>
+                            <li><a href="mailbox.html">邮箱</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/pages/system/Login.html">退出登录</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">菜单
+                    </div>
+                </li>
+
+                {% for list in request.session.userList.items %}
+                    <li>
+                        <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">{{ list.0 }}</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            {% for l in list %}
+                                {% if list.0 != l %}
+                                    {% for x in l %}
+                                        <li><a href="javascript:chargeUrl('{{ list.0 }}','{{ x.0 }}','{{ x.1 }}')">{{ x.0 }}</a></li>
+{#                                        <li><a target="iframe" href="javascript:chargeUrl('{{ list.0 }}','{{ x.0 }}','{{ x.1 }}')">{{ x.0 }}</a></li>#}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+</div>
+    <div id="page-wrapper" class="gray-bg dashbard-1" style="height: 95%">
+    	<div class="row border-bottom" style="width: 100% ; height: 8%">
+        	<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        		<div class="navbar-header">
+            		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+                        <i class="fa fa-bars"></i>
+                    </a>
+            		<form role="search" class="navbar-form-custom" action="search_results.html">
+                		<div class="form-group">
+                    		<input disabled="disabled" type="text" placeholder="首页" class="form-control" name="top-search" id="top-search">
+                		</div>
+            		</form>
+        		</div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <span class="m-r-sm text-muted welcome-message">运维平台</span>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                        <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <a href="profile.html" class="pull-left">
+                                    <img alt="image" class="img-circle" src="/static/img/a7.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <small class="pull-right">46小时前</small>
+                                    <strong>苏东辉</strong> 服务客户 <strong>李总</strong>. <br>
+                                    <small class="text-muted">三天前 上午 7:58 - 10.06.2014</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <a href="profile.html" class="pull-left">
+                                    <img alt="image" class="img-circle" src="/static/img/a4.jpg">
+                                </a>
+                                <div class="media-body ">
+                                    <small class="pull-right text-navy">5小时前</small>
+                                    <strong>刘明城</strong> 服务客户 <strong>吴总</strong>. <br>
+                                    <small class="text-muted">昨天 凌晨 1:21 - 11.06.2014</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="dropdown-messages-box">
+                                <a href="profile.html" class="pull-left">
+                                    <img alt="image" class="img-circle" src="/static/img/profile.jpg">
+                                </a>
+                                <div class="media-body ">
+                                    <small class="pull-right">23小时前</small>
+                                    <strong>袁建</strong> 服务客户 <strong>陶总</strong>. <br>
+                                    <small class="text-muted">两天前 下午 2:30 - 11.06.2014</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="text-center link-block">
+                                <a href="mailbox.html">
+                                    <i class="fa fa-envelope"></i> <strong>所有信息</strong>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        <li>
+                            <a href="mailbox.html">
+                                    <i class="fa fa-envelope fa-fw"></i> 你有 16 条未读消息
+                                    <span class="pull-right text-muted small">4 分钟前</span>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="profile.html">
+                                    <i class="fa fa-twitter fa-fw"></i> 3 个新用户
+                                    <span class="pull-right text-muted small">12 分钟前</span>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="grid_options.html">
+                                    <i class="fa fa-upload fa-fw"></i> 上次登录时间
+                                    <span class="pull-right text-muted small">4 小时前</span>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="text-center link-block">
+                                <a href="notifications.html">
+                                    <strong>查看所有提醒</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/pages/system/Login.html">
+                        <i class="fa fa-sign-out"></i> 退出登录
+                    </a>
+                </li>
+                <li>
+                    <a class="right-sidebar-toggle">
+                        <i class="fa fa-tasks"></i>
+                    </a>
+                </li>
+            </ul>
+        	</nav>
+        </div>
+        <div style="height: 87%; width: 100%" class="row wrapper border-bottom white-bg page-heading" >
+        	<iframe id="iframe" name="iframe"  src="/pages/system/FirstPage.html" frameborder='0' height="100%" width="100%" ></iframe >
+        </div>
+    </div>
+    <div class="footer" style="height: 5%">
+    	<div id="foot" class="foot" align="center">版权所有：xxxxxxx有限公司</div>
+    </div>
+</body>
+
+    <script>
+{#        window.onload=function(){#}
+{##}
+{#        }#}
+        function chargeUrl(key , info , path){
+            var sign = key + ' / ' + info;
+            document.getElementById("top-search").setAttribute("placeholder",sign);
+{#            $('#top-search').text( info );#}
+{#            $('#key').html("<strong>" + key + "</strong>");#}
+            $('#iframe').attr('src',path);
+        }
+
+        $(document).ready(function() {
+            var a = "<a href='i1ndex.html'><i class='fa fa-th-large'>";
+            setTimeout(function() {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 4000
+                };
+                toastr.success('目前为测试阶段', '欢迎使用xxxx系统');
+
+            }, 1300);
+
+            var data1 = [
+                [0,4],[1,8],[2,5],[3,10],[4,4],[5,16],[6,5],[7,11],[8,6],[9,11],[10,30],[11,10],[12,13],[13,4],[14,3],[15,3],[16,6]
+            ];
+            var data2 = [
+                [0,1],[1,0],[2,2],[3,0],[4,1],[5,3],[6,1],[7,5],[8,2],[9,3],[10,2],[11,1],[12,0],[13,2],[14,8],[15,0],[16,0]
+            ];
+            $("#flot-dashboard-chart").length && $.plot($("#flot-dashboard-chart"), [
+                data1, data2
+            ],
+                    {
+                        series: {
+                            lines: {
+                                show: false,
+                                fill: true
+                            },
+                            splines: {
+                                show: true,
+                                tension: 0.4,
+                                lineWidth: 1,
+                                fill: 0.4
+                            },
+                            points: {
+                                radius: 0,
+                                show: true
+                            },
+                            shadowSize: 2
+                        },
+                        grid: {
+                            hoverable: true,
+                            clickable: true,
+                            tickColor: "#d5d5d5",
+                            borderWidth: 1,
+                            color: '#d5d5d5'
+                        },
+                        colors: ["#1ab394", "#1C84C6"],
+                        xaxis:{
+                        },
+                        yaxis: {
+                            ticks: 4
+                        },
+                        tooltip: false
+                    }
+            );
+
+            var doughnutData = [
+                {
+                    value: 300,
+                    color: "#a3e1d4",
+                    highlight: "#1ab394",
+                    label: "App"
+                },
+                {
+                    value: 50,
+                    color: "#dedede",
+                    highlight: "#1ab394",
+                    label: "Software"
+                },
+                {
+                    value: 100,
+                    color: "#A4CEE8",
+                    highlight: "#1ab394",
+                    label: "Laptop"
+                }
+            ];
+
+            var doughnutOptions = {
+                segmentShowStroke: true,
+                segmentStrokeColor: "#fff",
+                segmentStrokeWidth: 2,
+                percentageInnerCutout: 45, // This is 0 for Pie charts
+                animationSteps: 100,
+                animationEasing: "easeOutBounce",
+                animateRotate: true,
+                animateScale: false
+            };
+
+            var ctx = document.getElementById("doughnutChart").getContext("2d");
+            var DoughnutChart = new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
+
+            var polarData = [
+                {
+                    value: 300,
+                    color: "#a3e1d4",
+                    highlight: "#1ab394",
+                    label: "App"
+                },
+                {
+                    value: 140,
+                    color: "#dedede",
+                    highlight: "#1ab394",
+                    label: "Software"
+                },
+                {
+                    value: 200,
+                    color: "#A4CEE8",
+                    highlight: "#1ab394",
+                    label: "Laptop"
+                }
+            ];
+
+            var polarOptions = {
+                scaleShowLabelBackdrop: true,
+                scaleBackdropColor: "rgba(255,255,255,0.75)",
+                scaleBeginAtZero: true,
+                scaleBackdropPaddingY: 1,
+                scaleBackdropPaddingX: 1,
+                scaleShowLine: true,
+                segmentShowStroke: true,
+                segmentStrokeColor: "#fff",
+                segmentStrokeWidth: 2,
+                animationSteps: 100,
+                animationEasing: "easeOutBounce",
+                animateRotate: true,
+                animateScale: false
+            };
+            var ctx = document.getElementById("polarChart").getContext("2d");
+            var Polarchart = new Chart(ctx).PolarArea(polarData, polarOptions);
+        });
+    </script>
+</html>

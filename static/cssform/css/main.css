@@ -1,0 +1,266 @@
+/*css最后引入*/
+/*body*/
+body {
+	background-color: white;
+	font-size: 13;
+}
+/*导航栏区域*/
+.navigator-div {
+	min-height: 35px;
+	border: 1px solid #e5e5e5;
+	margin-top: 15px;
+	background-color: #f7f7f7;
+	padding-left: 10px;
+	line-height: 35px;
+}
+/*标题区域*/
+.title-div {
+	margin-top: 10px;
+	padding-left: 5px;
+}
+.title-div span {
+	font-size: 17;
+	font-weight: bold;
+}
+/*搜索区域*/
+.search-div {
+	border: 1px solid #e5e5e5;
+	margin-top: 10px;
+	background-color: #f7f7f7;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+/*搜索区域-按钮区域*/
+.search-div_btn {
+	margin-top: 15px;
+}
+search-div_btn div > button {
+	width: 110px;
+	height: 36px;
+}
+/*表格区域*/
+.table-div {
+	margin-top: 15px;
+	background-color: #f7f7f7;
+}
+#div-table-container {
+	border: 1px solid #e5e5e5;
+}
+.table-div div > table {
+	background-color: white;
+}
+.table-div div > table > thead {
+	background-color: #f7f7f7;
+}
+.dt-lc {
+	margin-top:2.2px;
+	float:right;
+}
+.dt-lc div > label {
+	font-weight: normal;
+}
+/*datatables-information*/
+.dt-i {
+	margin-top:4px;
+	float:right;
+}
+.dt-i_modal {
+	margin-top: 4px;
+	float:right;
+}
+/*datatables-dt-p*/
+.dt-p {
+	margin-top:5px;
+	float:right;
+}
+.dt-p_modal {
+	margin-top:3px;
+	float:right;
+	margin-left: 0px;
+}
+/*分页箭头*/
+.pagination ul> li> a {
+	color: #999999;
+ 	text-decoration: none;
+ 	margin-top: 0px;
+}
+/*按钮*/
+.btn-info {
+	background-color: #4ca6ff;
+	width: 110px;
+	height: 32px;
+}
+.btn-info:hover {
+	color: #ffffff;
+	background-color: #4ca6ff;
+	border-color: #4ca6ff;
+}
+.btn-info:active {
+  color: #a2d2ea;
+  background-color: #1da4d6;
+  border-color: #1da4d6;
+}
+.btn-success {
+	background-color: #1ed296;
+	width: 110px;
+	height: 32px;
+}
+.btn-success:hover {
+	color: #ffffff;
+	background-color: #1ed296;
+	border-color: #1ed296;
+}
+.btn-success:active {
+	color: #a8e2ca;
+	background-color: #1bc28a;
+	border-color: #1bc28a;
+}
+.open .dropdown-toggle.btn-success {
+	color: #a8e2ca;
+	background-color: #1bc28a;
+	border-color: #1bc28a;
+}
+.btn-danger {
+	background-color: #fc6055;
+	width: 110px;
+	height: 32px;
+}
+.btn-danger:hover {
+	color: #ffffff;
+	background-color: #fc6055;
+	border-color: #fc6055;
+}
+.btn-danger:active {
+	color: #e9939d;
+	background-color: #fc6055;
+	border-color: #fc6055;
+}
+/*select2 调整相对位置*/
+.select2-container {
+	margin-top: -5px;
+}
+/*select2 调整控件高度*/
+.select2-container .select2-selection--single {  
+	border:1px solid #e5e5e5;
+	height:30px;
+} 
+/*调整下拉的颜色*/
+.select2-dropdown--below {
+	border:1px solid #e5e5e5;
+}
+/*调整下拉框中的搜索域*/
+.select2-container--default .select2-search--dropdown .select2-search__field {
+	border:1px solid #e5e5e5;
+}
+/*调整上拉的颜色*/
+.select2-dropdown--above {
+	border:1px solid #e5e5e5;
+}
+/*调整下拉框高亮颜色*/
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+	background-color: #4ca6ff;
+}
+/*select2 调整内部文字的位置*/
+/* .select2-container .select2-selection--single .select2-selection__rendered {
+	color:#a9a9a9;
+} */
+/*表格字号*/
+table tr {
+	font-size: 13px;
+}
+/*输入框统一属性*/
+input {
+    border-radius: 4px;
+    border:1px solid #e5e5e5;
+    padding-left: 8px;
+    height: 30px;
+    font-size: 13;
+}
+/*table thead内容全部居中垂直*/
+/* div.dataTables_scrollHead table thead tr td,
+div.dataTables_scrollHead table thead tr th {
+	padding-left: 10px;
+	vertical-align: middle;
+} */
+/*table tbody内容全部垂直居中*/
+/* div.dataTables_scrollBody tbody tr th,
+div.dataTables_scrollBody tbody tr td {
+	vertical-align: middle;
+	padding-left: 10px;
+} */
+/*table内容垂直居中*/
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+	vertical-align: middle;
+	padding-left: 10px;
+}
+/*table 边框,取消上、左、右边框*/
+.table-bordered {
+  border: none;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border-left: 1px solid #e5e5e5;
+  border-right: none;
+  border-bottom: 1px solid #e5e5e5;
+  border-top: 1px solid #e5e5e5;
+}
+.table-bordered > thead > tr > th:first-child,
+.table-bordered > tbody > tr > th:first-child,
+.table-bordered > tfoot > tr > th:first-child,
+.table-bordered > thead > tr > td:first-child,
+.table-bordered > tbody > tr > td:first-child,
+.table-bordered > tfoot > tr > td:first-child {
+  border-left: none;
+}
+/*table 无数据tr颜色*/
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: white;
+}
+/*table 悬停颜色*/
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+    background-color: #f7f7f7;
+}
+/*table input 复选框*/
+input.iCheck {
+	width: 12px;
+	height: 12px;
+}
+.table .td-checkbox input {
+	margin-left:-5px;
+}
+.help_tipe {
+	margin-top: 10px;
+	width:300px;
+	float: left;
+	padding:15px 15px 0; 
+	background: #f4fafd;
+	margin-left:-35px;
+	border: 1px solid #e5e5e5;
+}
+.help_tipe_book {
+	margin-top: 10px;
+	width:380px;
+	float: left;
+	padding:15px; 
+	background: #f4fafd;
+	margin-left:-35px;
+	border: 1px solid #e5e5e5;
+}
+.help_tipe > p {
+	margin-left: 25px;
+}
+.help_tipe_book > p {
+	margin-left: 25px;
+}
+

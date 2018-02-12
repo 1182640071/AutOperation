@@ -1,0 +1,39 @@
+/*modal css*/
+/*距离上边间距*/
+.modal {
+	margin-top: 130px;
+}
+/*modal 背景颜色*/
+.modal-content {
+	background-color: #f7f7f7;
+}
+/*标题*/
+h4 {
+	text-align: center;
+	font-weight: bold;
+}
+/*modal form 样式*/
+.modal-middle {
+	margin-top: 40px;
+}
+.modal-middle > form > .form-group input {
+	width: 230px;
+	border: 1px solid #e5e5e5;
+	height: 30px;
+}
+.modal-middle > form > .form-group textarea {
+	width: 230px;
+	border: 1px solid #e5e5e5;
+}
+.modal-middle > form > .form-group select {
+	width: 230px;
+	border:1px solid #e5e5e5;
+}
+.modal-middle > form > .form-group label {
+	font-weight: normal;
+}
+/*modal 提交按钮样式*/
+.modal-bottom {
+	text-align: center;
+	margin-top: 40px;
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="/static/cssform/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/static/js/jsform/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="/static/cssform/animate.css" rel="stylesheet">
+    <link href="/static/cssform/style.css" rel="stylesheet">
+    <!-- 最后引入 -->
+    <link href="/static/cssform/css/main.css" rel="stylesheet" />
+    <link href="/static/cssform/css/main-modal.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="/static/js/drawn/jQuery.js"></script>
+    <script type="text/javascript" src="/static/js/drawn/jqplot.js"></script>
+</head>
+<body style="background-color: #FCFCFC">
+    <div style=" background-color: white;position: absolute ; top: 5% ; left: 2% ; width: 12% ; height: 90%">
+        <div>
+            <label>监控方式:</label>
+            <ul>
+                <li style="margin-top: 17%; "><a href="#" style="text-decoration:none; color: red">Zabbix</a></li>
+                <li style="margin-top: 17%;"><a href="#" style="text-decoration:none;color: red">Cacti</a></li>
+                <li style="margin-top: 17%;"><a href="#" style="text-decoration:none;color: red">Nagios</a></li>
+                <li style="margin-top: 17%;"><a href="#" style="text-decoration:none;color: red">Custom</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <hr style="background-color: #2d323d; height: 90% ; width:1px;position: absolute ; left: 15%;" />
+    <div style="position: absolute ; top: 5% ; left: 16%; width: 82%;height: 90% ;background-color: white;">
+        <button onclick="buttonFunction('{{ listSoftware }}')" type="button" style=" width: 100%;background-color:grey  ;border: hidden;  color: white">ADD NEW SERVER</button>
+        <div style="background-color: white;" >
+            <select  style="position: absolute;top: 10%; left: 5%; width: 20%; height: 5%;background-color: #1ab394 ;border: hidden;  color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="se" id="servername">
+                <option value=0 selected="selected">SELECT SERVER</option>
+                {% for list in hostList %}
+                    <option value={{ list.id }} >{{ list.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select  style="position: absolute;top: 10%; left: 28%; width: 20%; height: 5%;background-color:#FF7575;border: hidden;  color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="se" id="monitortype">
+                <option value=0 selected="selected">SELECT MONITOR</option>
+                <option value=1 >The  Network  Card  Traffic</option>
+                <option value=2 >Disk Free</option>
+            </select>
+            <button onclick="submitSelect()" type="button" style=" position: absolute;top: 10%; left: 51%;width: 10%;background-color:#00b3ee  ;border: hidden;  color: white">GO</button>
+            <label id = 'lable' style="position: absolute;top: 17%; height: 2%;  left: 35%;">zabbix:  The  Network  Card  Traffic [centos6-1]</label>
+        </div>
+        <div id="chart1" style=" display: block;background-color: white; ;position: absolute;top: 20%; left: 5%; width: 92%; height: 70%"></div>
+    </div>
+</body>
+
+    <script type="text/javascript">
+
+    jQuery.ajax({
+                type : "post",
+                url  : "/firstAnayse/",
+                dataType : 'json',
+                async: false,
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(d){
+                    data = d[1]
+                    x = d[0]
+                    line_title = d[2]
+                    data_max = d[3]
+                    lable = d[4]
+                    x_label = d[5]
+                }
+            });
+
+
+{#	var data = [[1,2,3,4,5,6,7,8,9],[3,6,8,1,11,22,4,21,6],[3,4,2,3,8,10,4,23,3,9]];#}
+{#	var data_max = 30; //Y轴最大刻度#}
+{#	var line_title = ["事件","故障","其他"]; //曲线名称#}
+	var y_label = ""; //Y轴标题
+{#	var x_label = "Y轴:数量 X轴:日期"; //X轴标题#}
+{#	var x = ['3月1日','3月2日','3月3日','3月4日','3月5日','3月6日','3月7日','3月8日','3月9日','3月10日']; //定义X轴刻度值#}
+	var title = "这是标题"; //统计图标标题
+	j.jqplot.diagram.base("chart1", data, line_title, "", x, x_label, y_label, data_max, 1);
+    $("#lable").text(lable);
+{#	j.jqplot.diagram.base("chart2", data, line_title, "", x, x_label, y_label, data_max, 2);#}
+    </script>
+
+    <script>
+        function submitSelect(){
+            var name = $("#servername").val();
+            var type = $("#monitortype").val();
+
+            if (name == '0'){
+                alert('请选择监控主机');
+                return;
+            }
+            if (type == '0'){
+                alert('请选择监控项');
+                return;
+            }
+
+            jQuery.ajax({
+                type : "post",
+                url  : "/firstAnayse/",
+                dataType : 'json',
+                data : {'name' : name , 'type' : type},
+                async: false,
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(d){
+                    data = d[1]
+                    x = d[0]
+                    line_title = d[2]
+                    data_max = d[3]
+                    lable = d[4]
+                    x_label = d[5]
+                }
+            });
+
+            var y_label = ""; //Y轴标题
+            document.getElementById("chart1").innerHTML='';
+            j.jqplot.diagram.base("chart1", data, line_title, "", x, x_label, y_label, data_max, 1);
+            $("#lable").text(lable);
+        }
+    </script>
+
+
+</html>

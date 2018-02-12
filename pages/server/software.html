@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/cssform/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/cssform/style.css" rel="stylesheet">
+</head>
+
+<body style="background-color: white; overflow: hidden; " >
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search software " class="input form-control">
+                            <span class="input-group-btn">
+                                    <button type="button" class="btn btn btn-primary"> <i class="fa fa-search"></i> Search</button>
+                            </span>
+                        </div>
+                        <div class="clients-list">
+                        <ul class="nav nav-tabs">
+                            <span class="pull-right small text-muted">23 Elements</span>
+                            <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> 软件列表</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 操作结果</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="full-height-scroll">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <tbody>
+
+                                            {% for listSoftware in softwareList %}
+                                                <tr>
+                                                <td class="client-avatar">
+                                                    <input name="Fruit" type="checkbox" value="" />
+                                                </td>
+                                                <td><a data-toggle="tab" href="#contact-1" class="client-link">{{ listSoftware }}</a></td>
+                                                <td>
+                                                    <select style="background-color:  #ff8F59 ; color: white ;border: hidden" aria-controls="editable" data-dt-idx="0" tabindex="0" name="Range{{ listSoftware }}" id="Range{{ listSoftware }}">
+                                                        <option value=1 selected="selected">CLUSTERING</option>
+                                                        <option value=2 >SINGLE</option>
+                                                    </select>
+                                                </td>
+                                                <td class="contact-type"><i class="fa fa-envelope"> </i></td>
+                                                <td>
+                                                    <select style="background-color:  #1ab394 ;border: hidden;  color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="Style{{ listSoftware }}" id="Style{{ listSoftware }}">
+                                                        <option value=1 selected="selected" >install</option>
+                                                        <option value=2 >update</option>
+                                                        <option value=3 >remove</option>
+                                                    </select>
+                                                </td>
+                                                <td class="client-status">
+                                                    <button onclick="buttonFunction('{{ listSoftware }}')" type="button" style="background-color:#FF7575 ;border: hidden;  color: white">DONE</button>
+                                                </td>
+                                            </tr>
+
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                        <div style="float: right" class="dataTables_paginate paging_simple_numbers" id="editable_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button previous disabled" id="editable_previous">
+                                                    <a href="#" aria-controls="editable" data-dt-idx="0" tabindex="0">Previous</a>
+                                                </li>
+                                                <li class="paginate_button active">
+                                                    <a href="#" onclick="clickA(this)" aria-controls="editable" data-dt-idx="2" tabindex="0">1</a>
+                                                </li>
+                                                <li class="paginate_button active">
+                                                    <a href="#" onclick="clickA(this)" aria-controls="editable" data-dt-idx="2" tabindex="0">2</a>
+                                                </li>
+                                                <li class="paginate_button active">
+                                                    <a href="#" onclick="clickA(this)" aria-controls="editable" data-dt-idx="2" tabindex="0">3</a>
+                                                </li>
+                                                 <li class="paginate_button active">
+                                                    <a href="#" onclick="clickA(this)" aria-controls="editable" data-dt-idx="2" tabindex="0">4</a>
+                                                </li>
+
+                                                <li class="paginate_button next disabled" id="editable_next">
+                                                    <a href="#" onclick="upDpwn('{{ ThingsInformation.pageNow }}' , 'down')" aria-controls="editable" data-dt-idx="7" tabindex="0">Next</a>
+                                                </li>
+
+                                                <li class="paginate_button" id="editable_next">
+                                                    <select style="background-color:  #1ab394 ; color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="statu" id="selectPortSize">
+                                                        <option value=10 selected="selected">默认显示7行</option>
+                                                        <option value=1 >调整显示1行</option>
+                                                        <option value=5 >调整显示5行</option>
+                                                        <option value=6 >调整显示6行</option>
+                                                        <option value=7 >调整显示7行</option>
+                                                        <option value=8 >调整显示8行</option>
+                                                        <option value=9 >调整显示9行</option>
+                                                        <option value=10 >调整显示10行</option>
+                                                        <option value=11 >调整显示11行</option>
+                                                        <option value=12 >调整显示12行</option>
+                                                        <option value=13 >调整显示13行</option>
+                                                        <option value=14 >调整显示14行</option>
+                                                        <option value=15 >调整显示15行</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <tbody id="softwareResult">
+                                            <tr>
+                                                <td><a data-toggle="tab" href="#company-1" class="client-link">软件名</a></td>
+                                                <td>运行状态</td>
+                                                <td><i class="fa fa-flag"></i> 安装版本</td>
+                                                <td>安装结果</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="ibox ">
+
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div id="contact-1" class="tab-pane active">
+                                <div class="row m-b-lg">
+                                    <div class="col-lg-8">
+                                        <button type="button" class="btn btn-primary btn-sm btn-block"><i
+                                                class="fa fa-envelope"></i> 更新记录
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="client-detail">
+                                <div class="full-height-scroll">
+                                    <div id="vertical-timeline" class="vertical-container dark-timeline">
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-coffee"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>client用户安装vim软件
+                                                </p>
+                                                <span class="vertical-date small text-muted"> 2017-4-10 </span>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-briefcase"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>mst用户安装gcc软件
+                                                </p>
+                                                <span class="vertical-date small text-muted"> 2017-4-9 </span>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-bolt"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>mst用户更新mysql软件
+                                                </p>
+                                                <span class="vertical-date small text-muted"> 2017-4-9 </span>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-warning"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>client用户安装了mysql
+                                                </p>
+                                                <span class="vertical-date small text-muted"> 2017-4-8 </span>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-coffee"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>client用户更新了zabbix
+                                                </p>
+                                                <span class="vertical-date small text-muted"> 2017-4-7 </span>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-briefcase"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>client用户安装了zabbix
+                                                </p>
+                                                <span class="vertical-date small text-muted"> 2017-4-6 </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="/static/js/jsform/jquery-2.1.1.js"></script>
+    <script src="/static/js/jsform/bootstrap.min.js"></script>
+    <script src="/static/js/jsform/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/jsform/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/jsform/inspinia.js"></script>
+    <script src="/static/js/jsform/plugins/pace/pace.min.js"></script>
+    <script type="text/javascript">
+        function buttonFunction(soft){
+            var rangeSign = 'Range'+soft;
+            var styleSign = 'Style'+soft;
+            var range = $("#"+rangeSign).val();
+            var style = $("#"+styleSign).val();
+            var _html = '';
+
+            var d = new Date();
+            var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+            $.ajax({
+                type : "post",
+                url  : "/dealSoftware/",
+                data : {'range':range, 'style':style , 'soft':soft},
+                dataType : "json",
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(data){
+                    alert('操作结束,可通过[操作结果]菜单查看详细信息')
+                    var json = eval('(' + data + ')');
+                    for(var k in json['userResult']) {
+                        _html = _html + '<tr><td><a data-toggle="tab" href="#company-1" class="client-link">'+ k +'</a></td>'
+                        for(var kk in json['userResult'][k]){
+                            _html = _html + '<td>'+ json['userResult'][k][kk] +'</td>'
+                        }
+                        _html = _html + '</tr>';
+                    }
+                    $("#softwareResult").html(_html);
+                    var infomation = '<div class="vertical-timeline-block">';
+                    infomation = infomation + '<div class="vertical-timeline-icon navy-bg">';
+                    infomation = infomation + '<i class="fa fa-warning"></i></div>';
+                    infomation = infomation + '<div class="vertical-timeline-content">';
+                    infomation = infomation + '<p>client用户安装了'+soft + '</p>';
+                    infomation = infomation + '<span class="vertical-date small text-muted"> '+str+' </span></div></div>';
+                    $("#vertical-timeline").html(infomation + $("#vertical-timeline").html());
+                }
+            });
+        }
+    </script>
+</body>
+</html>

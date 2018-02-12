@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/static/plugins/dataTables-1.10.7/plugins/integration/bootstrap/2/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="/static/plugins/dataTables-1.10.7/plugins/integration/font-awesome/dataTables.fontAwesome.css">
+    <link rel="stylesheet" href="/static/js/plugins/jquery-validate/css/bootstrapValidator.css">
+    <link href="/static/cssform/css/style.css" rel="stylesheet" type="text/css" />
+    {#<link href="${path}/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />#}
+    <link href="/static/cssform/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/static/js/jsform/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+    <link href="/static/cssform/animate.css" rel="stylesheet">
+    <link href="/static/cssform/style.css" rel="stylesheet">
+    <!-- 最后引入 -->
+    <link href="/static/cssform/css/main.css" rel="stylesheet" />
+    <link href="/static/cssform/css/main-modal.css" rel="stylesheet" />
+
+    <!-- Data Tables -->
+    <link href="/static/cssform/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+
+    <!-- upload -->
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/cssform/animate.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/dropzone/basic.css" rel="stylesheet">
+    <link href="/static/cssform/plugins/dropzone/dropzone.css" rel="stylesheet">
+
+
+    <script type="text/javascript" src="/static/js/jquery/jquery-2.1.4.js"></script>
+    <script	src="/static/plugins/dataTables-1.10.7/media/js/jquery.dataTables.js"></script>
+    <script	src="/static/plugins/dataTables-1.10.7/plugins/integration/bootstrap/2/dataTables.bootstrap.js"></script>
+    <script src="/static/js/common/constant.js"></script>
+    <script src="/static/js/device/device.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/jquery-validate/js/bootstrapValidator.js"></script>
+    <script src="/static/js/plugins/select.js"></script>
+
+        <!-- Mainly scripts -->
+    <script src="/static/js/jsform/jquery-2.1.1.js"></script>
+    <script src="/static/js/jsform/bootstrap.min.js"></script>
+    <script src="/static/js/jsform/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/jsform/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/static/js/jsform/inspinia.js"></script>
+    <script src="/static/js/jsform/plugins/pace/pace.min.js"></script>
+
+    <!-- DROPZONE -->
+    <script src="/static/js/jsform/plugins/dropzone/dropzone.js"></script>
+
+    <style type="text/css">
+        .div {
+            position: absolute;
+            z-index: 1;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            max-height: 80%;
+            border: 5px solid #CCC;
+            text-align: center;
+            font-size: 10px;
+            display: none;
+            background-color: white;
+            overflow: auto;
+            _height: expression(this.scrollHeight > 456 ? "456px" : auto);
+        }
+        .div_catalog{
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            width: 100%;
+            max-height: 100%;
+            border: 5px solid #CCC;
+            text-align: center;
+            font-size: 10px;
+            display: none;
+            background-color: black;
+            opacity: 0.5;
+            overflow: auto;
+            _height: expression(this.scrollHeight > 456 ? "456px" : auto);
+        }
+
+        .service_upload_u{
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            width: 100%;
+            max-height: 100%;
+{#            border: 5px solid #CCC;#}
+            text-align: center;
+            font-size: 10px;
+            display: none;
+            background-color: black;
+            overflow: hidden;
+            _height: expression(this.scrollHeight > 456 ? "456px" : auto);
+        }
+
+
+        .cmdClass {
+            position: absolute;
+            z-index: 1;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            max-height: 80%;
+            border: 5px solid #CCC;
+            text-align: center;
+            font-size: 10px;
+            display: none;
+            background-color: white;
+            overflow: auto;
+            _height: expression(this.scrollHeight > 456 ? "456px" : auto);
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        //切换主屏幕
+        function closeDiv(id,id2){
+
+            document.getElementById(id).style.display="none";
+            document.getElementById(id2).style.display="none";
+        }
+
+        var index = 1;
+
+        //对服务器的操作,查看目录结构,增加,删除文件目录等操作
+        function getHomeList(name , type , target){
+            var path = $("#server_save_path").text();
+            var target_path = '';
+            if (type == 'next'){
+                target_path = path + '/' + target;
+            }else if(type == 'HOME'){
+                target_path = '/home';
+            }else if(type == 'up'){
+                r = path.split("/");
+                var uppath = '';
+                for(var i = 1 ; i < r.length -1 ; i++){
+                    uppath = uppath + '/' + r[i];
+                }
+                target_path = uppath;
+            }else if(type == 'save'){
+                alert('保存目录 ' + path);
+                target_path = path;
+                var div = '';
+                if(index%2==0){
+                   div = " <div class='setings-item yellow-skin'><span class='skin-name' style='color: white'>" + "[" + name + "]:" + path + "</span></div>";
+                }else{
+                   div = " <div class='setings-item default-skin'><span class='skin-name' style='color: white'>" + "[" + name + "]:" + path + "</span></div>";
+                }
+                var dict = "'" + name+path + "'" + ":" + "'" + path + "',"
+                $("#listOper").html(div + $("#listOper").html());
+                $("#list-oper-server").html(dict + $("#list-oper-server").html());
+                index = index + 1;
+                if(index == 101){
+                    index = 1;
+                }
+                return;
+            }else if(type == 'delete'){
+                alert('删除目录');
+                target_path = path;
+            }else if(type == 'del'){
+                alert('删除文件');
+                target_path = path;
+            }else{
+                alert('操作类型错误');
+                return;
+            }
+             jQuery.ajax({
+                type : "post",
+                url  : "/servercatalog/",
+                data : {'name':name,'order':type,'path' : target_path},
+                dataType : 'json',
+                async: false,
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(data){
+                    if(data == '-100'){
+                        alert('目录获取失败');
+                        return;
+                    }else if (data == '-101'){
+                        alert('表单提交异常');
+                        return;
+                    }
+                    var content = '';
+                    if(data != '') {
+                        for (i in data) {
+                            content = content + "<tr>";
+                            content = content + "<td style='width: 15%'>" + data[i][2] + "</td>";
+                            var fdStart = data[i][0].indexOf("d");
+                            if (fdStart == 0) {
+                                content = content + "<td style='width: 15%'>文件夹</td>";
+                                content = content + "<td style='width: 15%'>" + data[i][1] + "</td>";
+                                content = content + "<td style='width: 15%'>" + data[i][0] + "</td>";
+                                content = content + "<td style='width: 40%'>";
+                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='getHomeList(\"" + name + "\",\"next\" , \"" + data[i][2] + "\");'>打开</button>&nbsp;&nbsp;";
+                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='getHomeList(\"" + name + "\",\"delete\" , \"" + data[i][2] + "\");'>删除此目录</button>&nbsp;&nbsp;";
+                                content = content + "</td>";
+                            } else {
+                                content = content + "<td style='width: 15%'>文件</td>";
+                                content = content + "<td style='width: 15%'>" + data[i][1] + "</td>";
+                                content = content + "<td style='width: 15%'>" + data[i][0] + "</td>";
+                                content = content + "<td style='width: 40%'>";
+                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>查看</button>&nbsp;&nbsp;";
+                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>删除此文件</button>&nbsp;&nbsp;";
+                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>再次编辑</button>&nbsp;&nbsp;";
+                                content = content + "<td>";
+                            }
+                            content = content + "</tr>";
+                        }
+                    }
+                    $("#server_save_path").html(target_path);
+                    $("#server_lable").html("从机:" + name + "    当前目录:" + target_path);
+                    $("#catalog_detail").html(content);
+                    document.getElementById("submitIputName").value = name;
+                    document.getElementById("submitIput").value = target_path;
+                    if(target_path != '/home' && '' != path && type !='HOME'){
+                        var foot ="<input type='button' value='保存当前路径' onclick='getHomeList(\"" + name + "\",\"save\" , \"" + path + "\")' />";
+                        foot = "<input type='button' value='上级目录' onclick='getHomeList(\"" + name + "\",\"up\" , \"" + path + "\")' />" + foot;
+                        foot = foot + "<input type='button' value='上传文件至此目录' onclick='upload(\"" + target_path + "\")' />";
+                        foot = foot + "<input type='button' value='关闭' onclick='closeDiv(\"service_show_catalog\" , \"service_show_catalog_back\")' />";
+                        $("#server_foot").html(foot);
+                    }else if(target_path == '/home' || '' == path || type =='HOME'){
+                        $("#server_foot").html("<input type='button' value='关闭' onclick='closeDiv(\"service_show_catalog\" , \"service_show_catalog_back\")' />");
+                    }
+                    document.getElementById("service_show_catalog_back").style.display = "block";
+                    document.getElementById("service_show_catalog").style.display = "block";
+                }
+            });
+        }
+
+         $(document).ready(function(){
+
+            Dropzone.options.myAwesomeDropzone = {
+
+                autoProcessQueue: false,
+                uploadMultiple: true,
+                parallelUploads: 100,
+                maxFiles: 100,
+
+                // Dropzone settings
+                init: function() {
+                    var myDropzone = this;
+                    this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        myDropzone.processQueue();
+                    });
+                    this.on("sendingmultiple", function() {
+                    });
+                    this.on("successmultiple", function(files, response) {
+                        alert(response);
+                    });
+                    this.on("errormultiple", function(files, response) {
+                        alert('上传失败');
+                    });
+                }
+            }
+       });
+
+        function upload(path){
+            document.getElementById('uploadDiv').style.display="block";
+        }
+
+        function uploadManay(){
+            var information = $("#list-oper-server").text();
+            if(information == ''){
+                alert('目录列表里是空的,请选择操作路径');
+            }else{
+                document.getElementById("submitIputType").value = '0';
+                document.getElementById("submitIput").value = information;
+                document.getElementById('uploadDiv').style.display="block";
+            }
+        }
+
+    function runCmds(){
+        var id = document.getElementsByName("pome");
+        for(var i = 0; i < id.length; i++){
+             if(id[i].checked)
+             break;
+             if(i == id.length-1){
+               alert("请选择主机");
+               return;
+             }
+        }
+        var radio = document.getElementsByName("pome");
+        var val = "";
+        for(var i=0;i<radio.length;i++)
+        {
+            if(radio[i].checked){
+                val = val + radio[i].value + ',';
+            }
+        }
+        var cmd = $("#runMany").val();
+        if(cmd == ''){
+            alert('请输入执行指令');
+            return;
+        }
+        jQuery.ajax({
+                type : "post",
+                url  : "/serverCmd/",
+                data : {'name':val , 'cmd':cmd},
+                dataType : 'json',
+                async: false,
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(data){
+                    if(data == '-101'){
+                        alert('执行错误,请检查参数是否正确');
+                    }
+                    $("#content").html(data);
+                    document.getElementById("service_show_catalog_back").style.display = "block";
+                    document.getElementById("cmd_detail").style.display = "block";
+                }
+            });
+   }
+
+   function selectAll(){
+       var radio = document.getElementsByName("pome");
+        var val = "";
+        for(var i=0;i<radio.length;i++)
+        {
+            radio[i].checked=true;
+        }
+    $("#selectCheck").html("<a href='javascript:selectNone()'>反选</a>")
+   }
+
+   function selectNone(){
+       var radio = document.getElementsByName("pome");
+        var val = "";
+        for(var i=0;i<radio.length;i++)
+        {
+            radio[i].checked=false;
+        }
+    $("#selectCheck").html("<a href='javascript:selectAll()'>全选</a>")
+   }
+
+    </script>
+</head>
+<body id = 'allBody'>
+    <div class="panel panel-default" >
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+                    <td width="5%" id = 'selectCheck'><a href="javascript:selectAll()">全选</a></td>
+                    <td width="20%">从机</td>
+          			<td width="20%">IP</td>
+          			<td width="20%">所属机房</td>
+         			<td width="20%">用途</td>
+          			<td width="15%">操作系统</td>
+				</tr>
+			</thead>
+			<tbody style="height: 100px ; overflow: auto;">
+                {% for list in serverList %}
+                    <tr>
+                        <td width="5%"><span><input type="checkbox" value="{{ list.name }} " name = 'pome' /></span></td>
+                        <td width="20%"><span><a onclick="getHomeList('{{ list.name }}', 'HOME' , '')">{{ list.name }}</a></span></td>
+                        <td width="20%"><span>{{ list.ipv4 }}</span></td>
+                        <td width="20%"><span>{{ list.spath }}</span></td>
+                        <td width="20%"><span>{{ list.use }}</span></td>
+                        <td width="20%"><span>{{ list.os }}</span></td>
+                    </tr>
+                {% endfor %}
+			</tbody>
+		</table>
+	</div>
+    <div style="float: right">
+        <button style=" background-color:#FF7575;border: hidden;text-align: center;vertical-align: middle" onclick="runCmds()" class="btn btn-primary">批量执行</button>&nbsp;
+        <input type="text" value="" id = 'runMany' />
+    </div>
+
+    <div id="service_show_catalog_back" class="div_catalog" style="width: 100% ; height: 100%;">
+    </div>
+    <div id = 'server_save_path' style="display: none"></div>
+    <div id = 'server_save_user' style="display: none">{{request.session.userName}}</div>
+    <div id = 'server_save_changeUser' style="display: none"></div>
+	<div id="service_show_catalog" class="div">
+		<form class="form-horizontal">
+            <label id = 'server_lable'></label>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td width="15%">文件/目录</td>
+                        <td width="15%">文件类型</td>
+                        <td width="15%">文件大小</td>
+                        <td width="15%">文件权限</td>
+                        <td width="40%">操作</td>
+                    </tr>
+			    </thead>
+                <thead id="catalog_detail">
+
+			    </thead>
+            </table>
+			<div id="server_foot" style="margin: 0px 25px 25px">
+				<input type="button" value="关闭" onclick="closeDiv('service_show_catalog' , 'service_show_catalog_back')" />
+			</div>
+		</form>
+	</div>
+
+
+    <div id="uploadDiv" class="service_upload_u" style="display: none; height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="col-lg-12" style="height: 100%">
+                <div class="ibox float-e-margins" style="height: 100%">
+                    <div class="ibox-title">
+                        <h5>Dropzone Area</h5>
+                        <div class="ibox-tools">
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="height: 100%">
+                        <form id="my-awesome-dropzone" class="dropzone" action="/serverupload/" method="post">
+                            <div class="dropzone-previews"></div>
+                            <input id = 'submitIputType' name ='submitIputType'style="display: none" value="1"/>
+                            <input id = 'submitIput' name ='submitIput'style="display: none" value=""/>
+                            <input id = 'submitIputName' name ='submitIputName'style="display: none" value=""/>
+                            <button type="submit" class="btn btn-primary pull-right">Submit this form!</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="theme-config">
+        <div style="display: none" id="list-oper-server"></div>
+        <div class="theme-config-box">
+            <div class="spin-icon">
+    {#            class="fa fa-cogs fa-spin"#}
+                <i>列表</i>
+            </div>
+            <div class="skin-setttings" id = "listOper">
+                <div class="setings-item ultra-skin">
+                        <span class="skin-name ">
+{#                            <a target="_blank" class="s-skin-3">#}
+{#                                SUBMIT FROM#}
+{#                            </a>#}
+                            <a href="javascript:uploadManay()">SUBMIT THIS FROM</a>
+
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cmd_detail" class="cmdClass">
+		<form class="form-horizontal">
+            <div id="content1">
+                <pre id="content" style="text-align: left ; background-color: #0c0c0c ; color: #1bc28a">
+                </pre>
+            </div>
+			<div style="margin: 0px 25px 25px">
+				<input type="button" value="关闭" onclick="closeDiv('cmd_detail' , 'service_show_catalog_back')" />
+			</div>
+		</form>
+	</div>
+</body>
+
+<script>
+
+
+    // SKIN Select
+    $('.spin-icon').click(function () {
+        $(".theme-config-box").toggleClass("show");
+    });
+
+    function submit_list_form(){
+        var information = $("#list-oper-server").text();
+        if(information == ''){
+            alert('目录列表里是空的,请选择操作路径');
+        }else{
+            alert($("#list-oper-server").text());
+
+            jQuery.ajax({
+                type : "post",
+                url  : "/upload_manay/",
+                data : {'info':"{" + information + "}"},
+                dataType : 'json',
+                async: false,
+                error : function(event ,request , settings){
+                    alert("操作失败,请稍等片刻重新尝试......");
+                    return;
+                },
+                success : function(data){
+                    alert(data);
+                }
+            });
+
+
+
+        }
+    }
+
+</script>
+</html>

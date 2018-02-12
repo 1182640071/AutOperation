@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运维平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+    <link rel="stylesheet" href="/static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/assets/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/assets/css/form-elements.css">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="shortcut icon" href="/static/assets/ico/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/assets/ico/apple-touch-icon-57-precomposed.png">
+    <script type="text/javascript" src="/static/js/jquery/jquery-2.1.4.js"></script>
+
+    <script type="text/javascript">
+
+        function fclick(pas , name , vcode){
+            $.ajax({
+				type : "post",
+				url  : "/onload/",
+                data : {'username':name, 'password':pas , 'vcode':vcode},
+				dataType : "html",
+				error : function(event ,request , settings){
+					alert("天啊! 请求失败! 怎么办? 快联系管理员寻求帮助吧!");
+                    return;
+				},
+				success : function(data){
+					if('0' != data){
+						alert("用户名密码都输不对还想登录？做梦！");
+						return false;
+					}else{
+                        location.href="/form/";
+					}
+				}
+
+			});
+	    }
+
+		var keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv" + "wxyz0123456789+/" + "=";
+
+        function encode64(input) {
+			var output = "";
+		    var chr1, chr2, chr3 = "";
+		    var enc1, enc2, enc3, enc4 = "";
+		    var i = 0;
+		    do {
+		    	chr1 = input.charCodeAt(i++);
+		        chr2 = input.charCodeAt(i++);
+		        chr3 = input.charCodeAt(i++);
+		        enc1 = chr1 >> 2;
+		        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+		        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+		        enc4 = chr3 & 63;
+		        if (isNaN(chr2)) {
+		            enc3 = enc4 = 64;
+		        } else if (isNaN(chr3)) {
+		            enc4 = 64;
+		        }
+		        output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
+		        chr1 = chr2 = chr3 = "";
+		        enc1 = enc2 = enc3 = enc4 = "";
+		    } while (i < input.length);
+		    return output;
+		}
+
+		function commit(){
+			var account = $('#account').val();
+			var pwd = $('#pwd').val();
+            var vcode = $('#vcode').val();
+            if(pwd == '' || account == '' || vcode == ''){
+                alert("你真能! 用户名密码,验证码都没输全还想登录,你咋不登天啊!");
+                return;
+            }
+			newpassword = encode64(pwd);
+			$("#pwd").val(newpassword);
+{#            alert(newpassword);#}
+            fclick(newpassword , account , vcode)
+		}
+	</script>
+
+    <script>
+        // 点击一次,更改图片内容,
+        function ChangeCode(ths){
+            ths.src = ths.src + '?';
+        }
+    </script>
+
+</head>
+<body style="overflow: hidden">
+    <div class="top-content" style="background-image: url('/static/images/intro-bg.jpg') ; background-position:center ; background-size:cover">
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2 text">
+                            <h1><strong>自动化运维平台</strong></h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3 form-box">
+{#                            opacity: 0.5;#}
+                            <div class="form-bottom" style="background-color: transparent ;)">
+                           	<form class="form-signin" id="myform" action="/onload/" method="post">
+			                    	<div class="form-group">
+			                        	<input type="text" name="account" value="" placeholder="用户名..." autocomplete="off" class="form-username form-control" id="account">
+			                        </div>
+			                        <div class="form-group">
+			                        	<input type="password" name="pwd" value="" placeholder="密码..." autocomplete="off" class="form-password form-control" id="pwd">
+			                        </div>
+                                    <div class="form-group">
+                                        <input type="text" name="vcode" value="" placeholder="验证码..." autocomplete="off"  id="vcode">
+                                        <img src="/check_code/" onclick="ChangeCode(this);">
+                                    </div>
+			                        <button type="button" onclick="javascript:commit()" class="btn">登录</button>
+			                   </form>
+		                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Javascript -->
+        <script src="/static/assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/static/assets/js/jquery.backstretch.min.js"></script>
+        <script src="/static/assets/js/scripts.js"></script>
+</body>
+</html>

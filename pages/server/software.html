@@ -7,9 +7,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/static/cssform/bootstrap.min.css" rel="stylesheet">
     <link href="/static/cssform/style.css" rel="stylesheet">
+
+        <style>
+        .serverlist {
+            position: absolute;
+            z-index: 3;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            max-height: 80%;
+            border: 5px solid #CCC;
+            text-align: center;
+            font-size: 10px;
+            display: none;
+            background-color: white;
+            overflow: auto;
+            _height: expression(this.scrollHeight > 456 ? "456px" : auto);
+        }
+
+
+         .div_catalog{
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            width: 100%;
+            max-height: 100%;
+            border: 5px solid #CCC;
+            text-align: center;
+            font-size: 10px;
+            display: none;
+            background-color: black;
+            opacity: 0.5;
+            overflow: auto;
+            _height: expression(this.scrollHeight > 456 ? "456px" : auto);
+        }
+        </style>
 </head>
 
-<body style="background-color: white; overflow: hidden; " >
+<body style="background-color: white; " >
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="col-sm-8">
@@ -39,23 +74,23 @@
                                                 <td class="client-avatar">
                                                     <input name="Fruit" type="checkbox" value="" />
                                                 </td>
-                                                <td><a data-toggle="tab" href="#contact-1" class="client-link">{{ listSoftware }}</a></td>
+                                                <td><a data-toggle="tab" href="#contact-1" class="client-link">{{ listSoftware.0 }}</a></td>
                                                 <td>
-                                                    <select style="background-color:  #ff8F59 ; color: white ;border: hidden" aria-controls="editable" data-dt-idx="0" tabindex="0" name="Range{{ listSoftware }}" id="Range{{ listSoftware }}">
+                                                    <select style="background-color:  #ff8F59 ; color: white ;border: hidden" aria-controls="editable" data-dt-idx="0" tabindex="0" name="Range{{ listSoftware.0 }}" id="Range{{ listSoftware.0 }}">
                                                         <option value=1 selected="selected">CLUSTERING</option>
                                                         <option value=2 >SINGLE</option>
                                                     </select>
                                                 </td>
                                                 <td class="contact-type"><i class="fa fa-envelope"> </i></td>
                                                 <td>
-                                                    <select style="background-color:  #1ab394 ;border: hidden;  color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="Style{{ listSoftware }}" id="Style{{ listSoftware }}">
+                                                    <select style="background-color:  #1ab394 ;border: hidden;  color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="Style{{ listSoftware.0 }}" id="Style{{ listSoftware.0 }}">
                                                         <option value=1 selected="selected" >install</option>
                                                         <option value=2 >update</option>
                                                         <option value=3 >remove</option>
                                                     </select>
                                                 </td>
                                                 <td class="client-status">
-                                                    <button onclick="buttonFunction('{{ listSoftware }}')" type="button" style="background-color:#FF7575 ;border: hidden;  color: white">DONE</button>
+                                                    <button onclick="buttonFunction('{{ listSoftware.0 }}' , '{{ listSoftware.1 }}')" type="button" style="background-color:#FF7575 ;border: hidden;  color: white">DONE</button>
                                                 </td>
                                             </tr>
 
@@ -131,7 +166,6 @@
             </div>
             <div class="col-sm-4">
                 <div class="ibox ">
-
                     <div class="ibox-content">
                         <div class="tab-content">
                             <div id="contact-1" class="tab-pane active">
@@ -214,6 +248,39 @@
                 </div>
             </div>
         </div>
+    {#                软件安装时选择主机列表#}
+        <div id="serverlist_detail" class="serverlist">
+            <table class="table table-bordered white-bg">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center" id="selectCheck"><a href="javascript:selectAll()">全选</a></th>
+                            <th>hostname</th>
+                        </tr>
+                    </thead>
+                    <tbody id="server-list">
+                    {% for server in serverList %}
+                        <tr><td width="20%" style="text-align: center"><label><input type="checkbox" value="{{ server }}" name = "pome" /></label> </td><td width="80%" style="text-align: left">{{ server }}</td></tr>
+{#                        {{ server }}#}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div id="installState" style="margin: 0px 25px 125px">
+                    <input type="button" value="确定" onclick="closeDiv('serverlist_detail' , 'service_show_catalog_back' , '0')"/>
+                    <input type="button" value="取消" onclick="closeDiv('serverlist_detail' , 'service_show_catalog_back' , '1')" />
+                </div>
+        </div>
+        <div id="service_show_catalog_back" class="div_catalog" style="width: 100% ; height: 100%;">
+        </div>
+
+
+        <div id="ld" style=" display: none ;position:absolute; left:-1px; top:1px; width:100%; height:100%; background-color:#FFFFFF; z-index:1000;">
+            <div id="center" style="position:absolute;">
+                <table border="0">
+                    <tr><td><span id="disp">页面加载中,请等待...</span></td></tr>
+{#                    <tr><td><img src="/common/image/2.gif"></td></tr>#}
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Mainly scripts -->
@@ -226,45 +293,88 @@
     <script src="/static/js/jsform/inspinia.js"></script>
     <script src="/static/js/jsform/plugins/pace/pace.min.js"></script>
     <script type="text/javascript">
-        function buttonFunction(soft){
-            var rangeSign = 'Range'+soft;
-            var styleSign = 'Style'+soft;
-            var range = $("#"+rangeSign).val();
-            var style = $("#"+styleSign).val();
-            var _html = '';
 
-            var d = new Date();
-            var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+        var software = '';
+        var pathinstall = '';
+
+        function buttonFunction(soft , path){
+            if (path != 'state' && path != 'yum') {
+                window.location.href = path;
+            }else{
+                software = soft;
+                document.getElementById("serverlist_detail").style.display = "block";
+                document.getElementById("service_show_catalog_back").style.display = "block";
+            }
+        }
+
+        function submitInstall() {
+{#            var d = new Date();#}
+{#            var str = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();#}
+            var id = document.getElementsByName("pome");
+            for(var i = 0; i < id.length; i++){
+                 if(id[i].checked)
+                 break;
+                 if(i == id.length-1){
+                   alert("请选择主机");
+                   return;
+                 }
+            }
+            var radio = document.getElementsByName("pome");
+            var val = "";
+            for(var i=0;i<radio.length;i++)
+            {
+                if(radio[i].checked){
+                    val = val + radio[i].value.trim() + ',';
+                }
+            }
             $.ajax({
-                type : "post",
-                url  : "/dealSoftware/",
-                data : {'range':range, 'style':style , 'soft':soft},
-                dataType : "json",
-                error : function(event ,request , settings){
+                type: "post",
+                url: "/dealSoftware/",
+                data: {'serverlist': val, 'soft': software},
+                dataType: "json",
+                async: false,
+                error: function (event, request, settings) {
                     alert("操作失败,请稍等片刻重新尝试......");
-                    return;
+                    return false;
                 },
-                success : function(data){
-                    alert('操作结束,可通过[操作结果]菜单查看详细信息')
-                    var json = eval('(' + data + ')');
-                    for(var k in json['userResult']) {
-                        _html = _html + '<tr><td><a data-toggle="tab" href="#company-1" class="client-link">'+ k +'</a></td>'
-                        for(var kk in json['userResult'][k]){
-                            _html = _html + '<td>'+ json['userResult'][k][kk] +'</td>'
-                        }
-                        _html = _html + '</tr>';
-                    }
-                    $("#softwareResult").html(_html);
-                    var infomation = '<div class="vertical-timeline-block">';
-                    infomation = infomation + '<div class="vertical-timeline-icon navy-bg">';
-                    infomation = infomation + '<i class="fa fa-warning"></i></div>';
-                    infomation = infomation + '<div class="vertical-timeline-content">';
-                    infomation = infomation + '<p>client用户安装了'+soft + '</p>';
-                    infomation = infomation + '<span class="vertical-date small text-muted"> '+str+' </span></div></div>';
-                    $("#vertical-timeline").html(infomation + $("#vertical-timeline").html());
+                success: function (data) {
+                    alert('操作结束,可通过[操作结果]菜单查看详细信息');
+                    $("#softwareResult").html(data);
                 }
             });
+
         }
+
+
+        function closeDiv(id , id2 , rs){
+            document.getElementById(id).style.display="none";
+            document.getElementById(id2).style.display="none";
+            if (rs == '1'){
+                selectNone();
+            }else{
+                submitInstall();
+            }
+        }
+
+
+        function selectAll(){
+            var radio = document.getElementsByName("pome");
+            var val = "";
+            for(var i=0;i<radio.length;i++)
+            {
+                radio[i].checked=true;
+            }
+        $("#selectCheck").html("<a href='javascript:selectNone()'>反选</a>")
+       }
+
+       function selectNone(){
+           var radio = document.getElementsByName("pome");
+            for(var i=0;i<radio.length;i++)
+            {
+                radio[i].checked=false;
+            }
+        $("#selectCheck").html("<a href='javascript:selectAll()'>全选</a>")
+       }
     </script>
 </body>
 </html>

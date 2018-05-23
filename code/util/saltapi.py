@@ -134,7 +134,6 @@ class SaltApi(object):
         token = 'X-Auth-Token:%s' % self.token_id()
         obj = {'client': 'wheel', 'fun': 'key.accept','match':node_name}
         content = self.post(token=token,**obj)
-        print content
         ret = content['return'][0]['data']['success']
         return ret
 

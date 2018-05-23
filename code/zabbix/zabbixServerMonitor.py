@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from code.zabbix import getIZabbix
 from code.zabbix.httpPost import HttpPost
 from code.zabbix.getValues import getPNG
-from AutOperation.settings import url
+from AutOperation.settings import url , zabbix_graph , zabbix_url , zabbixuser , zabbixpasswd
 
 @csrf_exempt
 def monitorServer(request):
@@ -21,7 +21,6 @@ def monitorServer(request):
         monitor2 = request.POST['monitor2']
     except Exception :
         return '-101'
-
     token = getToken()
     grouplist = getGroupId(token)
     groupid = ''
@@ -45,7 +44,7 @@ def monitorServer(request):
     item.append(itemlist[monitor1])
     item.append(itemlist[monitor2])
     starttime=datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    png = getPNG("http://192.168.168.147/zabbix/index.php" , "http://192.168.168.147/zabbix/chart2.php" , 'Admin' , 'omygad911' , 7200 , starttime , 'static/zabbix-png' , 800 , 200)
+    png = getPNG(zabbix_url , zabbix_graph , zabbixuser , zabbixpasswd , 7200 , starttime , 'static/zabbix-png' , 800 , 200)
     rs = []
     for i in item:
         rs.append(png.getPng(i))
@@ -97,12 +96,12 @@ def getToken():
        "jsonrpc": "2.0",
        "method": "user.login",
        "params": {
-       "user": 'Admin',
-       "password": 'omygad911'
+       "user": zabbixuser,
+       "password": zabbixpasswd
     },
     "id": 0
     })
-    token = HttpPost().post('http://192.168.168.147/zabbix/api_jsonrpc.php' , data , {"Content-Type":"application/json"})
+    token = HttpPost().post(url , data , {"Content-Type":"application/json"})
     return token
 
 

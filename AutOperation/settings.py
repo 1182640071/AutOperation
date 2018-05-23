@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mymiddleware',
     'mymiddleware.SetCode',
+    # 'mymiddleware.websocketLog'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -67,7 +68,10 @@ TEMPLATES = [
         # ,
         'DIRS': [
         os.path.join(BASE_DIR,'pages').replace('\\', '/'),
+        os.path.join(BASE_DIR,'pages/app').replace('\\', '/'),
         os.path.join(BASE_DIR,'pages/server').replace('\\', '/'),
+        os.path.join(BASE_DIR,'pages/server/redis').replace('\\', '/'),
+        os.path.join(BASE_DIR,'pages/server/keepalived').replace('\\', '/'),
         os.path.join(BASE_DIR,'pages/serviceShow').replace('\\', '/'),
         os.path.join(BASE_DIR,'pages/portManage').replace('\\', '/'),
         os.path.join(BASE_DIR,'pages/system').replace('\\', '/'),
@@ -216,9 +220,9 @@ username = 'test'
 passwd = 'test'
 
 #db_set
-ip = '221.179.180.***'
-user = '***'
-password = '***'
+ip = '221.179.180.148'
+user = 'NX_USER'
+password = 'dbms_lock'
 
 #port_set
 userlist = {"test" : "test1" , "tt" : "t1"}
@@ -235,12 +239,41 @@ mysqlcode = 'utf8'
 salt_root_path = '/Users/wml/Desktop/ttttt'
 #/srv/salt
 
-#software_list
-softwareList = ['apache' , 'zabbix-agent' ,'gcc' , 'vim' , 'telnet' , 'netstat' , 'mysql' ]
+#软件安装列表software_list
+softwareList = [ ['redis','/pages/server/redis/redisInstall.html'] , ['tomcat8', 'state'] , ['PostgreSQL10', 'state'] , ['zabbix-agent', 'state'] , ['jdk8', 'state'] ,['keepalived','/pages/server/keepalived/keepalivedInstall.html'] , ['apache','state'] ,  ['vim','yum'] , ['telnet', 'yum'] , ['net-tool*','yum'] ]
+redisFilePath='/srv/salt/redisfiles'  #结尾不加/
+keepalivedFilePath='/srv/salt/keepalivedfiles'  #结尾不加/
+
+jenkinsList=[
+    {'ProjectName':'CCBWEB', 'create_time':'2017.10.10', 'version':'1.01','CodeName':'springmvcMaven1','Explain':'jenkins测试代码','state':'-1' , 'type':'WEB'},
+    {'ProjectName':'ABCWEB','create_time':'2017.2.13' ,'version':'2.01','CodeName':'Maven1','Explain':'测试数据','state':'0' , 'type':'JAR'}
+]
+
+zabbix_url = 'http://172.16.22.25/zabbix/index.php'
+zabbix_graph = 'http://172.16.22.25/zabbix/chart2.php'
+url = "http://172.16.22.25/zabbix/api_jsonrpc.php"
+zabbix_token='e897eb7d548db4eceb7dcc0056a0fc33'
+zabbixuser='Admin'
+zabbixpasswd='zabbix'
+# zabbix_url = 'http://172.16.0.219/index.php'
+# zabbix_graph = 'http://172.16.0.219/chart2.php'
+# url = "http://172.16.0.219/api_jsonrpc.php"
+# zabbix_token='f728f1771a4d705ec6cecec807aa9eb7'
+# zabbixuser='Admin'
+# zabbixpasswd='zabbix'
+
+salt_api='https://172.16.22.25:9000'
+salt_user='saltapi'
+salt_passwd='omygad911'
+salt_master='ip-172-16-0-175'
+
+jenkinsAPI="http://wangminglang:omygad911@192.168.168.119:8080/jenkins/job/{projectName}/build"
+
+
 
 
 #web_set
-webuser = {"mst" : "ZzJ1NmQ1YzQ=" , "tt" : "t1" , "client" : "ZzJ1NmQ1YzQ="}
+webuser = {"mst" : "MXEydzNlNHI1dA==" , "tt" : "t1" , "client" : "MXEydzNlNHI1dA=="}
 
 #web port manage 端口
 portShow = ["端口列表" , 'port_show.html']
@@ -263,25 +296,15 @@ dayData = ["日常数据" , 'dataManage.html']
 server_monitor = ["服务器监控" , '/hostId/']
 log_monitor = ["日志监控" , 'logMonitor.html']
 
+#applog监控
+applog = ["应用日志" , 'applog.html']
+
 #jenkins
 code_release = ["代码上线" , '/jenkinsList/']
 code_check = ['程序测试' , 'css_animation.html']
-
-jenkinsList=[
-    {'ProjectName':'CCBWEB', 'create_time':'2017.10.10', 'version':'1.01','CodeName':'springmvcMaven1','Explain':'jenkins测试代码','state':'-1' , 'type':'WEB'},
-    {'ProjectName':'ABCWEB','create_time':'2017.2.13' ,'version':'2.01','CodeName':'Maven1','Explain':'测试数据','state':'0' , 'type':'JAR'}
-]
-
-url = "http://192.168.168.147/zabbix/api_jsonrpc.php"
-zabbix_token='f728f1771a4d705ec6cecec807aa9eb7'
-
-salt_api='https://192.168.168.147:9000'
-
-jenkinsAPI="http://wangminglang:omygad911@192.168.168.119:8080/jenkins/job/{projectName}/build"
-
-mst = {"工单系统":[portManage] , "服务器":[serverShow,softwareManage] , "团队管理" : [dayManage,] , "监控":[server_monitor,log_monitor], "数据分析":[dayData,] , "jenkins":[code_release,code_check]}
-client = {"工单系统":[portManage] , "服务器":[serverShow,softwareManage] , "团队管理" : [dayManage,] , "监控":[server_monitor,log_monitor], "数据分析":[dayData,], "jenkins":[code_release,code_check]}
+mst = {"应用程序":[applog] , "工单系统":[portManage] , "服务器":[serverShow,softwareManage] , "团队管理" : [dayManage,] , "监控":[server_monitor,log_monitor], "数据分析":[dayData,] , "jenkins":[code_release,code_check]}
+client = {"应用程序":[applog] , "工单系统":[portManage] , "服务器":[serverShow,softwareManage] , "团队管理" : [dayManage,] , "监控":[server_monitor,log_monitor], "数据分析":[dayData,], "jenkins":[code_release,code_check]}
 
 showlist = {"mst" : mst , "client" : client}
 
-state = '1'  #state = '1' 测试环境(本机)  其他:有saltstack的环境
+state = '0'  #state = '1' 测试环境(本机)  其他:有saltstack的环境

@@ -158,6 +158,9 @@
                 for(var i = 1 ; i < r.length -1 ; i++){
                     uppath = uppath + '/' + r[i];
                 }
+                if (uppath == ''){
+                    uppath = '/';
+                }
                 target_path = uppath;
             }else if(type == 'save'){
                 alert('保存目录 ' + path);
@@ -177,11 +180,23 @@
                 }
                 return;
             }else if(type == 'delete'){
-                alert('删除目录');
-                target_path = path;
+                var num = Math.floor(Math.random() * 999999);
+                alert("你确定要删除目录" + path + '/' + target + '?,编码: ' + num);
+                var number=prompt('请输入编码:','请在这里输入编码');
+                if (number != num){
+                    alert('输入错误: ' + number);
+                    return;
+                }
+                target_path = path + '/' + target;
             }else if(type == 'del'){
-                alert('删除文件');
-                target_path = path;
+                var num = Math.floor(Math.random() * 999999);
+                alert("你确定要删除文件" + path + '/' + target + '?,编码: ' + num);
+                var number=prompt('请输入编码:','请在这里输入编码');
+                if (number != num){
+                    alert('输入错误: ' + number);
+                    return;
+                }
+                target_path = path + '/' + target;
             }else{
                 alert('操作类型错误');
                 return;
@@ -216,7 +231,9 @@
                                 content = content + "<td style='width: 15%'>" + data[i][0] + "</td>";
                                 content = content + "<td style='width: 40%'>";
                                 content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='getHomeList(\"" + name + "\",\"next\" , \"" + data[i][2] + "\");'>打开</button>&nbsp;&nbsp;";
-                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='getHomeList(\"" + name + "\",\"delete\" , \"" + data[i][2] + "\");'>删除此目录</button>&nbsp;&nbsp;";
+                                if (target_path != '/'){
+                                    content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='getHomeList(\"" + name + "\",\"delete\" , \"" + data[i][2] + "\");'>删除此目录</button>&nbsp;&nbsp;";
+                                }
                                 content = content + "</td>";
                             } else {
                                 content = content + "<td style='width: 15%'>文件</td>";
@@ -224,26 +241,38 @@
                                 content = content + "<td style='width: 15%'>" + data[i][0] + "</td>";
                                 content = content + "<td style='width: 40%'>";
                                 content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>查看</button>&nbsp;&nbsp;";
-                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>删除此文件</button>&nbsp;&nbsp;";
+                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='getHomeList(\"" + name + "\",\"del\" , \"" + data[i][2] + "\");'>删除此文件</button>&nbsp;&nbsp;";
+{#                                content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>删除此文件</button>&nbsp;&nbsp;";#}
                                 content = content + "<button class='btn btn-primary btn-xs' data-toggle='modal' data-target='#myModal1'  onclick='update(this , '{{ list.id }}' , '{{ list.mobile }}' , 'ok');'>再次编辑</button>&nbsp;&nbsp;";
                                 content = content + "<td>";
                             }
                             content = content + "</tr>";
                         }
                     }
-                    $("#server_save_path").html(target_path);
+                    if (target_path == '/'){
+                        $("#server_save_path").html('');
+                    }else{
+                        if(path != '' && (type == 'del'|| type == 'delete' )){
+                            target_path = path;
+                        }
+                        $("#server_save_path").html(target_path);
+                    }
                     $("#server_lable").html("从机:" + name + "    当前目录:" + target_path);
                     $("#catalog_detail").html(content);
                     document.getElementById("submitIputName").value = name;
                     document.getElementById("submitIput").value = target_path;
-                    if(target_path != '/home' && '' != path && type !='HOME'){
+                    if(target_path != '/'){
+{#                        && '' != path && type !='HOME'#}
                         var foot ="<input type='button' value='保存当前路径' onclick='getHomeList(\"" + name + "\",\"save\" , \"" + path + "\")' />";
                         foot = "<input type='button' value='上级目录' onclick='getHomeList(\"" + name + "\",\"up\" , \"" + path + "\")' />" + foot;
                         foot = foot + "<input type='button' value='上传文件至此目录' onclick='upload(\"" + target_path + "\")' />";
                         foot = foot + "<input type='button' value='关闭' onclick='closeDiv(\"service_show_catalog\" , \"service_show_catalog_back\")' />";
                         $("#server_foot").html(foot);
-                    }else if(target_path == '/home' || '' == path || type =='HOME'){
-                        $("#server_foot").html("<input type='button' value='关闭' onclick='closeDiv(\"service_show_catalog\" , \"service_show_catalog_back\")' />");
+                    }else if(target_path == '/'){
+{#                        target_path == '/home' || '' == path || type =='HOME'#}
+                        var foot ="<input type='button' value='保存当前路径' onclick='getHomeList(\"" + name + "\",\"save\" , \"" + path + "\")' />";
+                        foot = foot + "<input type='button' value='上传文件至此目录' onclick='upload(\"" + target_path + "\")' />";
+                        $("#server_foot").html(foot + "<input type='button' value='关闭' onclick='closeDiv(\"service_show_catalog\" , \"service_show_catalog_back\")' />");
                     }
                     document.getElementById("service_show_catalog_back").style.display = "block";
                     document.getElementById("service_show_catalog").style.display = "block";
@@ -310,7 +339,7 @@
         for(var i=0;i<radio.length;i++)
         {
             if(radio[i].checked){
-                val = val + radio[i].value + ',';
+                val = val + radio[i].value.trim() + ',';
             }
         }
         var cmd = $("#runMany").val();
@@ -394,32 +423,33 @@
                     <td width="3%" id = 'selectCheck'><a href="javascript:selectAll()">全选</a></td>
                     <td width="13%">主机名</td>
           			<td width="10%">主机ip</td>
-          			<td width="13%">用途</td>
-         			<td width="9%">所属机房</td>
-          			<td width="12%">机柜</td>
+{#          			<td width="12%">机柜</td>#}
                     <td width="9%">内存大小</td>
 {#                    <td width="6%">cpu数</td>#}
                     <td width="6%">cpu核数</td>
+{#                    <td width="15%">cpu</td>#}
                     <td width="9%">编码</td>
                     <td width="9%">操作系统</td>
-                    <td width="6%">监控</td>
+                    <td width="15%">内核</td>
+                    <td width="15%">用途</td>
+                    <td width="10%">监控</td>
 				</tr>
 			</thead>
 			<tbody style="height: 100px ; overflow: auto;">
                 {% for list in serverList %}
                     <tr>
-                        <td width="3%"><span><input type="checkbox" value="{{ list.name }} " name = 'pome' /></span></td>
-                        <td width="13%"><span><a onclick="getHomeList('{{ list.name }}', 'HOME' , '')">{{ list.name }}</a></span></td>
+                        <td width="3%"><span><input type="checkbox" value="{{ list.id }} " name = 'pome' /></span></td>
+                        <td width="13%"><span><a onclick="getHomeList('{{ list.id }}', 'HOME' , '')">{{ list.id }}</a></span></td>
                         <td width="10%"><span>{{ list.ipv4 }}</span></td>
-                        <td width="13%"><span>{{ list.use }}</span></td>
-                        <td width="9%"><span>{{ list.spath }}</span></td>
-                        <td width="12%"><span>{{ list.where }}</span></td>
+{#                        <td width="12%"><span>{{ list.where }}</span></td>#}
                         <td width="9%"><span>{{ list.mem_total }}</span></td>
-{#                        <td width="6%"><span>{{ list.num_gpus }}</span></td>#}
                         <td width="6%"><span>{{ list.num_cpus }}</span></td>
+{#                        <td width="15%"><span>{{ list.cpu_model }}</span></td>#}
                         <td width="9%"><span>{{ list.locale_info.detectedencoding }}</span></td>
                         <td width="9%"><span>{{ list.os }}{{ list.osrelease }}</span></td>
-                        <td width="6%"><button type="button" onclick="monitor('{{ list.name }}','','')">监控</button></td>
+                        <td width="15%"><span>{{ list.kernelrelease }}</span></td>
+                         <td width="15%"><span>{{ list.used }}</span></td>
+                        <td width="10%"><button type="button" onclick="monitor('{{ list.id }}','','')">监控</button></td>
                     </tr>
                 {% endfor %}
 			</tbody>
@@ -427,7 +457,7 @@
 	</div>
     <div style="float: right">
         <button style=" background-color:#FF7575;border: hidden;text-align: center;vertical-align: middle" onclick="runCmds()" class="btn btn-primary">批量执行</button>&nbsp;
-        <input type="text" value="" id = 'runMany' />
+        <input type="text" value="salt '*' saltutil.sync_grains" id = 'runMany' />
     </div>
 
     <div id="service_show_catalog_back" class="div_catalog" style="width: 100% ; height: 100%;">
@@ -522,15 +552,25 @@
 
 
         <div id="monitorid" class="monitoerdiv" style="display: none; height: 100%">
+            <div>
+                <a href="javascript:colseMonitor()"><i class="fa fa-play fa-rotate-90" style="position: absolute; left: 1%;top: 1%; color: white"></i></a>
+            </div>
             <form class="form-inline" style="position: absolute; right: 1%;top: 1%;">
                 <div class="form-group">
+                    <select style="background-color:  #1ab394 ; color: white" aria-controls="editable" data-dt-idx="0" tabindex="0" name="statu" id="selectMonitor">
+                        <option value='1' selected="selected">监控项选择</option>
+                        <option value='2' >磁盘大小</option>
+                        <option value='3' >磁盘剩余</option>
+                        <option value='4' >访问量</option>
+                        <option value='5' >内存大小</option>
+                    </select>
 					<label for="username" style="color: white">起始时间</label>
 					<input type="text" class="form-control" id="starttime" name="starttime">
                     <label for="username" style="color: white">至</label>
                     <input type="text" class="form-control" id="endtime" name="endtime">
 				</div>&nbsp;&nbsp;
-				<button type="submit" class="btn btn-primary" onClick="javascript:if (confirm('查询数据？')) return;else return;">查询</button>
-			</form>
+				<button type="submit" class="btn btn-primary" onClick="javascript:if (confirm('查询功能还没做呢!')) return;else return;">查询</button>
+            </form>
             <img id="img1" class="img1" src="/static/zabbix-png/563.png" style="position: absolute; top: 14%; left:1%; width: 48% ; height: 85%">
             <img id="img2" src="/static/zabbix-png/638.png" style="position: absolute; top: 14%; left:51%; width: 48% ; height: 85%">
         </div>
@@ -566,6 +606,10 @@
                 }
             });
         }
+    }
+
+    function colseMonitor(){
+        document.getElementById("monitorid").style.display = "none";
     }
 </script>
 </html>

@@ -24,6 +24,8 @@ from code.servser import software
 from code.dataManage import dayData
 from code.zabbix import getHostList,network , zabbixServerMonitor
 from code.JenkinsManage import jenkinsFunction
+from code.redisInstall import installRedis , redisFile
+from code.keepalivedInstall import installKeepAlived , keepalivedFile
 
 
 
@@ -73,8 +75,25 @@ urlpatterns = patterns('',
     (r'^jenkinsList/$',jenkinsFunction.loadList),
     #jenkins发布
     (r'^jenkinsChange/$',jenkinsFunction.codeRelease),
+
     #验证码
     (r'^check_code/$',login.check_code),
+
+    #安装redis
+    (r'^getRedisFiles/$',installRedis.getRedisList),
+    #安装redis时获取主机列表
+    (r'^getserver/$',installRedis.getServerList),
+    #安装redis过程
+    (r'^redisdeal/$',installRedis.redisInstall),
+    #安装redis配置文件创建
+    (r'^createRedisConfig/$',redisFile.createRedisFile),
+
+    #安装keepalived
+    (r'^getKeepAlivedFiles/$',installKeepAlived.getKeepAlivedList),
+    #安装keepalived过程
+    (r'^keepaliveddeal/$',installKeepAlived.keepalivedInstall),
+    #安装keepalived配置文件创建
+    (r'^createkeepalivedConfig/$',keepalivedFile.createKeepAlivedFile),
 
     (r'^test/$',login.testTest),
 )
